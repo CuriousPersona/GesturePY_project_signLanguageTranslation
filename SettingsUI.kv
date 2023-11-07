@@ -1,0 +1,44 @@
+<SettingsScr_widgets>:
+
+    BoxLayout:
+        orientation: 'vertical'
+        
+        MDToolbar:
+            title : 'Settings'
+            md_bg_color: (173/255, 20/255, 87/255, 1)
+            left_action_items : [["arrow-left", lambda x: app.ScrChange2()]]
+            on_action_button: app.navigation_draw()
+            elevation : dp(13)
+            
+        ScrollView:
+            do_scroll_x: False
+            
+            MDList:
+                ThreeLineRightIconListItem:
+                    text: "WebCam Display"
+                    secondary_text: "If turned on, user will be able to see the webcam feed"
+                    selected_color: (233/255, 30/255, 99/255, 1)
+                    font_style: "H6"
+                    on_release: root.Switch(root.ids["toggleOne"])
+                    
+                    ToggleSwitch:
+                        id: toggleOne
+                        thumb_down_color: 173/255, 20/255, 87/255, 1
+                        active: False        # False means OFF and True means ON
+                        on_active: app.Change_imgs(toggleOne, root.ids["toggleTwo"]) 
+                      
+                        
+                ThreeLineRightIconListItem:
+                    text: "Gesture Detection"
+                    secondary_text: "Unlocks the gesture recognition feature for the user"
+                    selected_color: (233/255, 30/255, 99/255, 1)
+                    font_style: "H6"   
+                    on_release: root.Switch(root.ids["toggleTwo"])
+                    
+                    ToggleSwitch:
+                        id: toggleTwo
+                        active: False    
+                        on_active: app.check_Shutter(toggleOne, toggleTwo)
+                        
+                        
+

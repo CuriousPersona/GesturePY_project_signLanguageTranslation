@@ -1,0 +1,217 @@
+#:import Factory kivy.factory.Factory 
+#:import RGBA kivy.utils.rgba
+
+<MainScr_widgets>:
+
+    BoxLayout:
+        orientation: "vertical"
+        
+        MDToolbar:
+            title: "GesturePY"
+            elevation: 13
+            right_action_items: [["circle-half-full", lambda x: app.Theme_change()], ["cog", lambda x: app.ScrChange1()]]
+            md_bg_color: (173/255, 20/255, 87/255, 1)  # rgba format
+            
+        MDBoxLayout:
+            
+            FloatLayout:  
+                id: Float
+                
+                Image:
+                    id: img
+                    allow_stretch: True
+                    keep_ratio: False          
+
+           
+            BoxLayout:
+                orientation: "vertical"
+                canvas:
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                        source: "D:/Adwait/Adw_apps/miniCONDAPython/OpenCV course (yml file)/Gesture_software/MainApp/chatwall.jpg"
+                          
+                MDCard:
+                    md_bg_color: (0, 0, 0, 0)
+ 
+                    RecycleView:
+                        id: RV
+                        data: root.messages
+                        viewclass: "Message"
+                        do_scroll_x: False
+                        RecycleBoxLayout:
+                            id: Box
+                            orientation: "vertical"
+                            spacing: dp(10)
+                            padding: [5, 10, 8, 10]
+                            size_hint_y: None
+                            size: self.minimum_size
+                            default_size_hint: (1, None)
+                            default_size: (0, 38)
+                            key_size: '_size'
+                                                      
+                MDBoxLayout:
+                    id: txtBoxlayout
+                    orientation: "horizontal"
+                    size_hint_y: 0.45
+                    spacing: dp(6)
+                    
+                    #Works for MD layouts of kivymd to set its background color. For normal kivy layouts, work with its "canvas" attribute
+                    md_bg_color: app.theme_cls.bg_normal
+                    
+                    #Works for MD layouts of kivymd. For normal kivy layouts, work with its "canvas" attribute
+                    radius: [17, 17, 0, 0]  # [top-left, top-right, bottom-right, bottom-left]
+                    
+                    padding: [10, 10, 5, 10]  # [padding-left, padding-top, padding-right, padding-bottom]
+                    
+             
+                    MDCard:
+                        id: txtCard
+                        radius: [17, 17, 17, 17]
+                        md_bg_color: (189/255, 189/255, 189/255, 1)
+                        padding: [10, 5, 6, 5]
+                        
+                        ScrollView:
+                            id: scrlv
+                            bar_color: (117/255, 117/255, 117/255, 1)
+                            bar_width: 3
+                            do_scroll_x: False
+                            do_scroll_y: True
+                            scroll_distance: 5
+                            
+                            TextInput:
+                                id: textin
+                                font_size: 23
+                                foreground_color: (0, 0, 0, 1) # by the way, this is already default value for color of text in "TextInput"
+                                cursor_width: sp(2)
+                                cursor_color: (97/255, 97/255, 97/255, 1)
+                                background_color: (0, 0, 0, 0)
+                                hint_text: "Your Text !"
+                                #current_hint_text_color: [208/255, 198/255, 158/255, 1]
+                                size_hint: (1, None)
+                                height: max(self.minimum_height, scrlv.height)
+
+                    BoxLayout:
+                        orientation: "vertical"
+                        size_hint_x: 0.25
+                        spacing: dp(2) 
+                        
+                        MDIconButton:
+                            id: iconbutton
+                            icon: "emoticon-outline"
+                            icon_size: dp(31)
+                            size_hint: (0.93, 0.01)
+                            pos_hint: {"center_x": 0.5}
+                            on_release: app.menu.open()
+                            #md_bg_color: (0/255, 121/255, 107/255, 1)
+                         
+                        
+                        MDFloatingActionButton:
+                            icon: "send"
+                            icon_size: dp(33)
+                            size_hint: (0.93, 0.01)
+                            elevation: 6
+                            pos_hint: {"center_x": 0.5}
+                            md_bg_color: (0, 137/255, 123/255, 1)
+                            on_release: root.sendMsg(textin)
+                           
+                            
+                        
+<Message@FloatLayout>:
+    message_id: -1
+    side: 'right'
+    text: ''
+    size_hint_y: None
+    _size: 0, 0
+    size: self._size
+    text_size: None, None
+    #opacity: min(1, self._size[0])
+    #canvas:
+        #Color:
+            #rgba: (123/255, 234/255, 21/255, 1)
+        #Rectangle:
+            #size: self.size
+            #pos: self.pos
+    
+    Label:
+        font_size: dp(19)
+        text: root.text
+        color: ((33/255, 33/255, 33/255, 1) if app.theme_cls.theme_style == "Light" else (238/255, 238/255, 238/255, 1))
+        padding: [10, 10]
+        size_hint: (None, 1)
+        size: self.texture_size
+        text_size: root.text_size
+        #on_texture_size: Factory.MainScr_widgets().updateMsgSize(root.message_id, self.texture_size, root.width, )
+        pos_hint: {'right': 1, 'center_y': 0.5}
+        
+        canvas.before:
+            Color:
+                rgba:((255/255, 255/255, 255/255, 1) if app.theme_cls.theme_style == "Light" else (38/255, 50/255, 56/255, 1)) 
+                     
+            RoundedRectangle:
+                size: self.texture_size
+                radius: [5, 5, 5, 5]
+                pos: self.pos
+                
+        canvas.after:
+            Color:
+            # We can also use RGBA() to specify color values in hexadecimal format
+                rgba: RGBA("#9E9E9E")
+            
+            Line:
+                rounded_rectangle: self.pos + self.texture_size + [dp(5)]
+                width: 1
+
+
+                
+<Emojis>
+    orientation: "horizontal"
+    adaptive_size: True
+    spacing: dp(2)
+    padding: [2, 2, 2, 2]
+    md_bg_color: (233/255, 30/255, 99/255, 1)
+
+    
+    # My own explicitly defined kivy properties/attributes [left_icon, center_icon, right_icon]. They are not built-in properties/attributes    
+    MDIconButton:
+        icon: root.left_icon
+        icon_size: dp(35)
+        theme_icon_color: "Custom"
+        icon_color: (255/255, 214/255, 0/255, 1)
+
+    
+    MDIconButton:
+        icon: root.center_icon
+        icon_size: dp(35)
+        theme_icon_color: "Custom"
+        icon_color: (255/255, 214/255, 0/255, 1)
+        
+    MDIconButton:
+        icon: root.right_icon
+        icon_size: dp(35)
+        theme_icon_color: "Custom"
+        icon_color: (255/255, 214/255, 0/255, 1)
+
+
+<MenuHeader>
+    orientation: "vertical"
+    adaptive_size: True
+    padding: [60, 15, 0, 10]
+
+
+    MDBoxLayout:
+        adaptive_size: True
+
+        MDLabel:
+            text: "Emojis"
+            font_size: dp(20)
+            adaptive_size: True
+            pos_hint: {"center_x": .5, "center_y": .5}
+            
+<OffImg>:
+    id: offimg
+    allow_stretch: True
+    keep_ratio: False
+    source: "D:/Adwait/Adw_apps/miniCONDAPython/OpenCV course (yml file)/Gesture_software/MainApp/weboff.jpg"
+    
+    
